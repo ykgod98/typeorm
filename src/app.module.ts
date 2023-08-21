@@ -1,28 +1,30 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './user/entities/user.entity';
 import { PhotoModule } from './photo/photo.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import configuration from './config/configuration';
 import { UserModule } from './user/user.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import configuration from './config/configuration';
+import { User } from './user/entities/user.entity';
+import { BizUserModule } from './biz-user/biz-user.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env',
       isGlobal: true,
       load: [configuration],
+      envFilePath: ['./src/config/.env'], //app/module에서 시작할때는 경로
     }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (ConfigService: ConfigService) => ({
+      useFactory: async (configService: ConfigService) => ({
         type: 'mysql',
-        host: ConfigService.get('database.host'),
-        port: ConfigService.get('database.port'),
-        username: ConfigService.get('database.user'),
-        password: ConfigService.get('database.password'),
-        database: ConfigService.get('database.name'),
+        host: configService.get('database.host'),
+        port: configService.get('database.port'),
+        username: configService.get('database.user'),
+        password: configService.get('database.password'),
+        database: configService.get('database.name'),
         entities: [User],
         synchronize: true,
         autoLoadEntities: true,
@@ -30,7 +32,10 @@ import { UserModule } from './user/user.module';
     }),
     UserModule,
     PhotoModule,
+    BizUserModule,
   ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
 // datasource와 typeormmodule의 차이점

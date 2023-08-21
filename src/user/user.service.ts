@@ -13,7 +13,7 @@ export class UserService {
   ) {}
 
   findAll(): Promise<User[]> {
-    console.log(this.configService.get<string>('DATABASE_USER'));
+    // console.log(this.configService.get<string>('DATABASE_USER'));
     return this.userRepository.find();
   }
 

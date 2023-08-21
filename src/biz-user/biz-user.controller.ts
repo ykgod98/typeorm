@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { BizUserService } from './biz-user.service';
 import { CreateBizUserDto } from './dto/create-biz-user.dto';
 import { UpdateBizUserDto } from './dto/update-biz-user.dto';
@@ -13,9 +21,14 @@ export class BizUserController {
   }
 
   @Get()
-  findAll() {
-    return this.bizUserService.findAll();
+  findUser() {
+    return this.bizUserService.findUser();
   }
+
+  // @Get()
+  // findAll() {
+  //   return 'all return';
+  // }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
